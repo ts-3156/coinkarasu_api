@@ -13,9 +13,11 @@ class Coincheck::SalesRatesController < ApplicationController
         from_symbol.blank? || !from_symbol.match(/\A[A-Z]{3}\z/) ||
         to_symbol.blank? || !to_symbol.match(/\A[A-Z]{3}\z/)
 
-    render json: Coincheck::SalesRate.order(created_at: :desc)
-                     .where('created_at < ?', Time.zone.at(time.to_i))
-                     .find_by(from_symbol: from_symbol, to_symbol: to_symbol)
+    rate = Coincheck::SalesRate.order(created_at: :desc)
+               .where('created_at < ?', Time.zone.at(time.to_i))
+               .find_by(from_symbol: from_symbol, to_symbol: to_symbol)
+
+    render json: (rate ? rate : {})
   end
 
   # GET /coincheck/sales_rates/1
