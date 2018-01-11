@@ -1,0 +1,22 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8mb4
+  charset: utf8mb4
+  collation: utf8mb4_unicode_ci
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= ENV['COINKARASU_DATABASE_HOST'] %>
+  username: <%= ENV['COINKARASU_DATABASE_USERNAME'] %>
+  password: <%= ENV['COINKARASU_DATABASE_PASSWORD'] %>
+  socket: <%= ENV['COINKARASU_DATABASE_SOCKET'] %>
+
+development:
+  <<: *default
+  database: coinkarasu_development
+
+test:
+  <<: *default
+  database: coinkarasu_test
+
+production:
+  <<: *default
+  database: coinkarasu_production
