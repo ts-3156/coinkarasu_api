@@ -10,8 +10,8 @@ class Coincheck::SalesRatesController < ApplicationController
     to_symbol = params[:to_symbol]
 
     return render json: {} if time.blank? || !time.match?(/\A\d+\z/) ||
-        from_symbol.blank? || !from_symbol.match?(/\A[A-Z]{10}\z/) ||
-        to_symbol.blank? || !to_symbol.match?(/\A[A-Z]{10}\z/)
+        from_symbol.blank? || !from_symbol.match?(/\A[A-Z]{1,10}\z/) ||
+        to_symbol.blank? || !to_symbol.match?(/\A[A-Z]{1,10}\z/)
 
     rate = Coincheck::SalesRate.order(created_at: :desc)
                .where('created_at < ?', Time.zone.at(time.to_i))
@@ -52,7 +52,7 @@ class Coincheck::SalesRatesController < ApplicationController
 
   private
   def verify
-    head :forbidden if ENV['VERIFY_REQUEST'].present? && !Security.verify(request)
+    head :forbidden if ENV['VERIFY_REQUEST'].present? && !Security.verify?(request)
   end
 
   # Use callbacks to share common setup or constraints between actions.
