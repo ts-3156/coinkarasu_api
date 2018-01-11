@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 20180111113442) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_coincheck_trading_rates_on_created_at"
+    t.index ["from_symbol", "to_symbol"], name: "index_coincheck_trading_rates_on_from_symbol_and_to_symbol"
   end
 
 end
