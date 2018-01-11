@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180111091840) do
+ActiveRecord::Schema.define(version: 20180111113442) do
+
+  create_table "apps", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+    t.string "key", null: false
+    t.string "secret", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_apps_on_created_at"
+    t.index ["key"], name: "index_apps_on_key", unique: true
+    t.index ["secret"], name: "index_apps_on_secret", unique: true
+  end
 
   create_table "coincheck_sales_rates", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
     t.string "from_symbol", null: false
@@ -18,6 +28,7 @@ ActiveRecord::Schema.define(version: 20180111091840) do
     t.decimal "rate", precision: 20, scale: 10, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_coincheck_sales_rates_on_created_at"
   end
 
   create_table "coincheck_trading_rates", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
@@ -26,6 +37,7 @@ ActiveRecord::Schema.define(version: 20180111091840) do
     t.decimal "rate", precision: 20, scale: 10, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_coincheck_trading_rates_on_created_at"
   end
 
 end

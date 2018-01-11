@@ -7,5 +7,6 @@ class CreateCoincheckTradingRates < ActiveRecord::Migration[5.1]
 
       t.timestamps null: false
     end
+    add_index :coincheck_trading_rates, :created_at
   end
 end

@@ -1,11 +1,21 @@
 class Coincheck::SalesRatesController < ApplicationController
+  before_action :verify, only: [:index]
   before_action :set_coincheck_sales_rate, only: [:show, :update, :destroy]
 
   # GET /coincheck/sales_rates
   def index
-    @coincheck_sales_rates = Coincheck::SalesRate.all
+    # @coincheck_sales_rates = Coincheck::SalesRate.all
+    time = params[:time]
+    from_symbol = params[:from_symbol]
+    to_symbol = params[:to_symbol]
 
-    render json: @coincheck_sales_rates
+    return render json: {} if time.blank? || !time.match(/\A\d+\z/) ||
+        from_symbol.blank? || !from_symbol.match(/\A[A-Z]{3}\z/) ||
+        to_symbol.blank? || !to_symbol.match(/\A[A-Z]{3}\z/)
+
+    render json: Coincheck::SalesRate.order(created_at: :desc)
+                     .where('created_at < ?', Time.zone.at(time.to_i))
+                     .find_by(from_symbol: from_symbol, to_symbol: to_symbol)
   end
 
   # GET /coincheck/sales_rates/1
@@ -39,13 +49,17 @@ class Coincheck::SalesRatesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_coincheck_sales_rate
-      @coincheck_sales_rate = Coincheck::SalesRate.find(params[:id])
-    end
+  def verify
+    head :forbidden if ENV['VERIFY_REQUEST'].present? && !Security.verify(request)
+  end
 
-    # Only allow a trusted parameter "white list" through.
-    def coincheck_sales_rate_params
-      params.fetch(:coincheck_sales_rate, {})
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_coincheck_sales_rate
+    @coincheck_sales_rate = Coincheck::SalesRate.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def coincheck_sales_rate_params
+    params.fetch(:coincheck_sales_rate, {})
+  end
 end
