@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180111113442) do
+ActiveRecord::Schema.define(version: 20180112121212) do
 
   create_table "apps", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
     t.string "uuid", null: false
@@ -42,6 +42,15 @@ ActiveRecord::Schema.define(version: 20180111113442) do
     t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_coincheck_trading_rates_on_created_at"
     t.index ["from_symbol", "to_symbol"], name: "index_coincheck_trading_rates_on_from_symbol_and_to_symbol"
+  end
+
+  create_table "cryptocompare_top_pairs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+    t.string "from_symbol", null: false
+    t.json "data", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_cryptocompare_top_pairs_on_created_at"
+    t.index ["from_symbol"], name: "index_cryptocompare_top_pairs_on_from_symbol"
   end
 
 end

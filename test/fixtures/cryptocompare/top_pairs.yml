@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  from_symbol: MyString
+  data: {}
+
+two:
+  from_symbol: MyString
+  data: {}
