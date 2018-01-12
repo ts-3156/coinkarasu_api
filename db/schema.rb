@@ -13,6 +13,7 @@
 ActiveRecord::Schema.define(version: 20180111113442) do
 
   create_table "apps", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+    t.string "uuid", null: false
     t.string "key", null: false
     t.string "secret", null: false
     t.datetime "created_at", null: false
@@ -20,6 +21,7 @@ ActiveRecord::Schema.define(version: 20180111113442) do
     t.index ["created_at"], name: "index_apps_on_created_at"
     t.index ["key"], name: "index_apps_on_key", unique: true
     t.index ["secret"], name: "index_apps_on_secret", unique: true
+    t.index ["uuid"], name: "index_apps_on_uuid", unique: true
   end
 
   create_table "coincheck_sales_rates", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|

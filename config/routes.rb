@@ -5,4 +5,6 @@ Rails.application.routes.draw do
   namespace :coincheck do
     get 'trading_rates', to: 'trading_rates#index', constraints: {format: 'json'}
   end
+
+  post 'apps', to: 'apps#create', constraints: {format: 'json'}
 end
