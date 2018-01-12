@@ -16,7 +16,7 @@ namespace :coincheck do
 
             Coincheck::TradingRate.create!(from_symbol: from.upcase, to_symbol: to.upcase, rate: rate)
           rescue => e
-            puts "error from=#{from} to=#{to} #{e.inspect}"
+            puts "#{Time.zone.now} error from=#{from} to=#{to} #{e.inspect}"
           end
         end
       end

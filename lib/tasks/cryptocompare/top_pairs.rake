@@ -13,7 +13,7 @@ namespace :cryptocompare do
           res = Net::HTTP.get(URI.parse(url + from))
           processed << res if res
         rescue => e
-          puts "error from=#{from} #{e.inspect}"
+          puts "#{Time.zone.now} error from=#{from} #{e.inspect}"
           m.synchronize {error += 1}
           raise Parallel::Break if error >= symbols.size / 10
         end

@@ -11,7 +11,7 @@ namespace :coincheck do
             json = JSON.parse client.read_rate(pair: "#{from}_#{to}").body
             Coincheck::SalesRate.create!(from_symbol: from.upcase, to_symbol: to.upcase, rate: json['rate'])
           rescue => e
-            puts "error from=#{from} to=#{to} #{e.inspect}"
+            puts "#{Time.zone.now} error from=#{from} to=#{to} #{e.inspect}"
             break if (error += 1) >= 3
           end
         end
