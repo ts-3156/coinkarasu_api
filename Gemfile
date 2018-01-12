@@ -7,6 +7,7 @@ end
 
 gem 'dotenv-rails'
 gem 'ruby_coincheck_client'
+gem 'parallel'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.4'
