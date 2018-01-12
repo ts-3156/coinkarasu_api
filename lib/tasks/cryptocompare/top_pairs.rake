@@ -11,7 +11,7 @@ namespace :cryptocompare do
       Parallel.each(symbols, in_threads: 3) do |from|
         begin
           res = Net::HTTP.get(URI.parse(url + from))
-          processed << res if res
+          processed << [from, res] if res
         rescue => e
           puts "#{Time.zone.now} error from=#{from} #{e.inspect}"
           m.synchronize {error += 1}
@@ -19,8 +19,12 @@ namespace :cryptocompare do
         end
       end
 
-      processed.size.times.map {processed.pop}.each do |res|
-        Cryptocompare::TopPair.create_from_response!(res)
+      processed.size.times.map {processed.pop}.each do |from, res|
+        begin
+          Cryptocompare::TopPair.create_from_response!(res)
+        rescue => e
+          puts "#{Time.zone.now} error from=#{from} res=#{res} #{e.inspect}"
+        end
       end
     end
   end
