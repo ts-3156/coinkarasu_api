@@ -7,4 +7,5 @@ Rails.application.routes.draw do
   end
 
   post 'apps', to: 'apps#create', constraints: {format: 'json'}
+  post 'json_web_tokens/verify', to: 'json_web_tokens#verify', constraints: {format: 'json'}
 end
