@@ -5,11 +5,15 @@ class Cryptocompare::CoinSnapshot < ApplicationRecord
 
   class << self
     def create_from_response!(res)
+      build_from_response(res).save!
+    end
+
+    def build_from_response(res)
       json = JSON.parse(res)
       data = json['Data']['Exchanges'].map do |row|
         {market: row['MARKET'], volume: row['VOLUME24HOUR']}
       end
-      create!(
+      new(
           from_symbol: json['Data']['AggregatedData']['FROMSYMBOL'],
           to_symbol: json['Data']['AggregatedData']['TOSYMBOL'],
           data: data)

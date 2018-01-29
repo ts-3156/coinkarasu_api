@@ -23,19 +23,23 @@ namespace :cryptocompare do
           res = Net::HTTP.get(URI.parse(url + 'fsym=' + from + '&tsym=' + to))
           processed << [from, to, res] if res
         rescue => e
-          puts "#{Time.zone.now} error from=#{from} to=#{to} #{e.inspect}"
+          puts "#{Time.zone.now} fetch error from=#{from} to=#{to} #{e.inspect}"
           m.synchronize {error += 1}
           raise Parallel::Break if error >= candidates.size / 10
         end
       end
 
+      records = []
+
       processed.size.times.map {processed.pop}.each do |from, to, res|
         begin
-          Cryptocompare::CoinSnapshot.create_from_response!(res)
+          records << Cryptocompare::CoinSnapshot.build_from_response(res)
         rescue => e
-          puts "#{Time.zone.now} error from=#{from} to=#{to} res=#{res} #{e.inspect}"
+          puts "#{Time.zone.now} build error from=#{from} to=#{to} res=#{res} #{e.inspect}"
         end
       end
+
+      Cryptocompare::CoinSnapshot.import(records)
     end
   end
 end

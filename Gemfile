@@ -9,6 +9,7 @@ gem 'dotenv-rails'
 gem 'ruby_coincheck_client'
 gem 'parallel'
 gem 'jwt'
+gem 'activerecord-import'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.4'
