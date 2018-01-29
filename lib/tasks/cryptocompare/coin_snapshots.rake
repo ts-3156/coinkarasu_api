@@ -1,11 +1,12 @@
 namespace :cryptocompare do
   namespace :coin_snapshots do
     desc 'update'
-    task update: :environment do
+    task update: :environment do |t|
       url = 'https://www.cryptocompare.com/api/data/coinsnapshot/?'
       error = 0
       m = Mutex.new
       processed = Queue.new
+      messages = []
 
       candidates = []
 
@@ -23,9 +24,12 @@ namespace :cryptocompare do
           res = Net::HTTP.get(URI.parse(url + 'fsym=' + from + '&tsym=' + to))
           processed << [from, to, res] if res
         rescue => e
-          puts "#{Time.zone.now} fetch error from=#{from} to=#{to} #{e.inspect}"
           m.synchronize {error += 1}
-          raise Parallel::Break if error >= candidates.size / 10
+          messages << "#{Time.zone.now} #{t.name} fetch error from=#{from} to=#{to} #{e.inspect}"
+          if error >= candidates.size / 10
+            messages << 'Suspended since too many errors'
+            raise Parallel::Break
+          end
         end
       end
 
@@ -35,11 +39,13 @@ namespace :cryptocompare do
         begin
           records << Cryptocompare::CoinSnapshot.build_from_response(res)
         rescue => e
-          puts "#{Time.zone.now} build error from=#{from} to=#{to} res=#{res} #{e.inspect}"
+          messages << "#{Time.zone.now} #{t.name} build error from=#{from} to=#{to} res=#{res} #{e.inspect}"
         end
       end
 
       Cryptocompare::CoinSnapshot.import(records)
+      messages.each {|msg| puts msg}
+      SlackClient.new.ping("#{t.name} ```#{messages.any? ? messages.join("\n") : 'ok'}```")
     end
   end
 end

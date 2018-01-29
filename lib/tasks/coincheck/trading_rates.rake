@@ -4,9 +4,10 @@ require 'bigdecimal/util'
 namespace :coincheck do
   namespace :trading_rates do
     desc 'update'
-    task update: :environment do
+    task update: :environment do |t|
       client = CoincheckClient.new
       records = []
+      messages = []
 
       %w(btc).each do |from|
         %w(jpy).each do |to|
@@ -17,12 +18,14 @@ namespace :coincheck do
 
             records << [from.upcase, to.upcase, rate]
           rescue => e
-            puts "#{Time.zone.now} error from=#{from} to=#{to} #{e.inspect}"
+            messages << "#{Time.zone.now} #{t.name} error from=#{from} to=#{to} #{e.inspect}"
           end
         end
       end
 
       Coincheck::TradingRate.import(%i(from_symbol to_symbol rate), records)
+      messages.each {|msg| puts msg}
+      SlackClient.new.ping("#{t.name} ```#{messages.any? ? messages.join("\n") : 'ok'}```")
     end
   end
 end
