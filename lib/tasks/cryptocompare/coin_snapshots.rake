@@ -45,7 +45,7 @@ namespace :cryptocompare do
 
       Cryptocompare::CoinSnapshot.import(records)
       messages.each {|msg| puts msg}
-      SlackClient.new.ping("#{t.name} ```#{messages.any? ? messages.join("\n") : 'ok'}```")
+      SlackClient.new.ping("#{t.name} ```#{messages.join("\n")}```") if messages.any?
     end
   end
 end
