@@ -1,4 +1,10 @@
 class Cryptocompare::CoinSnapshot < ApplicationRecord
+  IGNORE_LIST = [
+      %w(NXT USD),
+      %w(XRP USD),
+      %w(XRP USDT)
+  ]
+
   validates :from_symbol, presence: true, format: {with: /\A[A-Z0-9]{1,10}\z/}
   validates :to_symbol, presence: true, format: {with: /\A[A-Z0-9]{1,10}\z/}
   validates :data, presence: true

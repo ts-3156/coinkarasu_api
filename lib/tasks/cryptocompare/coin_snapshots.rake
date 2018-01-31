@@ -39,7 +39,9 @@ namespace :cryptocompare do
         begin
           records << Cryptocompare::CoinSnapshot.build_from_response(res)
         rescue => e
-          messages << "#{Time.zone.now} #{t.name} build error from=#{from} to=#{to} res=#{res} #{e.inspect}"
+          unless Cryptocompare::CoinSnapshot::IGNORE_LIST.any? {|f, _t| from == f && to == _t}
+            messages << "#{Time.zone.now} #{t.name} build error from=#{from} to=#{to} res=#{res} #{e.inspect}"
+          end
         end
       end
 
