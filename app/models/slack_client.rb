@@ -1,7 +1,19 @@
-module SlackClient
-  URL = ENV['SLACK_CRON_WEBHOOK']
+class SlackClient
+  def initialize(url)
+    @instance = Slack::Notifier.new(url)
+  end
 
-  def self.new
-    Slack::Notifier.new(URL)
+  def ping(*args)
+    @instance.ping(*args)
+  end
+
+  class << self
+    def cron
+      new(ENV['SLACK_CRON_WEBHOOK'])
+    end
+
+    def server
+      new(ENV['SLACK_SERVER_WEBHOOK'])
+    end
   end
 end

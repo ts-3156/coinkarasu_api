@@ -1,7 +1,12 @@
-PREFIX='cd /home/ec2-user/coinkarasu_api && RAILS_ENV=production bundle exec rake'
-SUFFIX='--silent >>/home/ec2-user/coinkarasu_api/log/cron.log 2>&1'
+RAKE_PREFIX='cd /home/ec2-user/coinkarasu_api && RAILS_ENV=production bundle exec rake'
+RUNNER_PREFIX='cd /home/ec2-user/coinkarasu_api && RAILS_ENV=production bundle exec rails runner'
+SUFFIX='>>/home/ec2-user/coinkarasu_apiSUFFIX='>>/home/ec2-user/coinkarasu_api/log/cron.log 2>&1'
 
- * * * * * /bin/bash -l -c "$PREFIX coincheck:sales_rates:update $SUFFIX"
- * * * * * /bin/bash -l -c "$PREFIX coincheck:trading_rates:update $SUFFIX"
- 0 * * * * /bin/bash -l -c "$PREFIX cryptocompare:top_pairs:update $SUFFIX"
-30 * * * * /bin/bash -l -c "$PREFIX cryptocompare:coin_snapshots:update $SUFFIX"
+# Update db
+ * * * * * /bin/bash -l -c "RAKE_PREFIX coincheck:sales_rates:update $SUFFIX"
+ * * * * * /bin/bash -l -c "RAKE_PREFIX coincheck:trading_rates:update $SUFFIX"
+ 0 * * * * /bin/bash -l -c "RAKE_PREFIX cryptocompare:top_pairs:update $SUFFIX"
+30 * * * * /bin/bash -l -c "RAKE_PREFIX cryptocompare:coin_snapshots:update $SUFFIX"
+
+# Send server stats
+10 * * * * /bin/bash -l -c "RUNNER_PREFIX bin/send_server_stats.rb $SUFFIX"
