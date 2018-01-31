@@ -8,10 +8,23 @@ namespace :cryptocompare do
       processed = Queue.new
       messages = []
 
+      # クエリの実行回数を減らすために、決め打ちのlimit付きで一括取得する
+      # 最新のレコードのみを残すためにindex_byの前にreverseしている
+      top_pairs = Cryptocompare::TopPair
+                      .order(created_at: :desc)
+                      .where(from_symbol: Cryptocompare::TopPair::SYMBOLS)
+                      .limit(Cryptocompare::TopPair::SYMBOLS.size)
+                      .reverse
+                      .index_by(&:from_symbol)
+
       candidates = []
 
       Cryptocompare::TopPair::SYMBOLS.each do |from|
-        top_pair = Cryptocompare::TopPair.order(created_at: :desc).find_by(from_symbol: from)
+        top_pair = top_pairs[from]
+        unless top_pair
+          # 最初のクエリで取りこぼした時のために、念のため取得する
+          top_pair = Cryptocompare::TopPair.order(created_at: :desc).find_by(from_symbol: from)
+        end
         next unless top_pair
 
         top_pair.data.map {|pair| pair['to_symbol']}.uniq.each do |to|
