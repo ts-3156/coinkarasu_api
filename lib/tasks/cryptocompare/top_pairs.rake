@@ -36,7 +36,7 @@ namespace :cryptocompare do
 
       Cryptocompare::TopPair.import(records)
       messages.each {|msg| puts msg}
-      SlackClient.cron.new.ping("#{t.name} ```#{messages.join("\n")}```") if messages.any?
+      SlackClient.cron.ping("#{t.name} ```#{messages.join("\n")}```") if messages.any?
     end
   end
 end
