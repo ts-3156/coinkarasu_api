@@ -2,8 +2,8 @@ class JsonWebTokensController < ApplicationController
   before_action :verify_request
 
   def verify
-    nonce = params[:nonce]
-    token = params[:token]
+    nonce = params[:_nonce]
+    token = params[:_jwt]
     return render json: {}, status: :unprocessable_entity if nonce.blank? || token.blank? || token.split('.').length != 3
 
     jwt = JsonWebToken.new(token)
