@@ -1,12 +1,26 @@
 class NotificationTokensController < ApplicationController
+  before_action :verify_request
+
   def create
     token = NotificationToken.new(uuid: params[:uuid], token: params[:token])
-    return render json: {} if !token.valid? || !App.exists?(uuid: uuid)
 
-    render json: token.tap(&:save!), status: :created
+    # ここでは App.exists?(uuid: token.uuid) の確認は行っていない。
+    # アプリ側で、AppとNotificationTokenの保存の順番が前後する可能性があるため。
+    return render json: {}, status: :unprocessable_entity unless token.valid?
+
+    if token.save
+      render json: token, status: :created
+    else
+      render json: {}, status: :unprocessable_entity
+    end
   end
 
   def update
-    render json: NotificationToken.find_by(uuid: params[:uuid])&.update!(token: params[:token])
+    token = NotificationToken.find_by(uuid: params[:uuid])
+    if token&.update!(token: params[:token])
+      render json: token
+    else
+      render json: {}
+    end
   end
 end

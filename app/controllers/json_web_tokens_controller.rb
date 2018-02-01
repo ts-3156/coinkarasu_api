@@ -1,12 +1,14 @@
 class JsonWebTokensController < ApplicationController
+  before_action :verify_request
+
   def verify
     nonce = params[:nonce]
     token = params[:token]
-    return render json: {} if nonce.blank? || token.blank? || token.split('.').length != 3
+    return render json: {}, status: :unprocessable_entity if nonce.blank? || token.blank? || token.split('.').length != 3
 
     jwt = JsonWebToken.new(token)
 
-    return render json: {} if !jwt.verify? ||
+    return render json: {}, status: :unprocessable_entity if !jwt.verify? ||
         nonce != Base64.decode64(jwt.payload['nonce']) ||
         jwt.payload['ctsProfileMatch'].to_s != 'true' ||
         jwt.payload['timestampMs'].to_i < 1.minute.ago.to_i ||
