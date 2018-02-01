@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180126151949) do
+ActiveRecord::Schema.define(version: 20180131130657) do
 
   create_table "apps", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
     t.string "uuid", null: false
@@ -62,6 +62,16 @@ ActiveRecord::Schema.define(version: 20180126151949) do
     t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_cryptocompare_top_pairs_on_created_at"
     t.index ["from_symbol"], name: "index_cryptocompare_top_pairs_on_from_symbol"
+  end
+
+  create_table "notification_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+    t.string "uuid", null: false
+    t.string "token", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_notification_tokens_on_created_at"
+    t.index ["token"], name: "index_notification_tokens_on_token", unique: true
+    t.index ["uuid"], name: "index_notification_tokens_on_uuid", unique: true
   end
 
 end
