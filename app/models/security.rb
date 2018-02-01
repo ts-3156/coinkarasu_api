@@ -14,10 +14,7 @@ class Security
       return false if key.blank? || nonce.blank? || signature.blank?
       return false if !nonce.match?(/\A\d+\z/) || nonce.to_i < 1.minute.ago.to_i
 
-      app = App.find_by(key: key)
-      return false unless app
-
-      sign(app.secret, nonce, request.url) == signature
+      (app = App.find_by(key: key)) && sign(app.secret, nonce, request.url) == signature
     end
   end
 end

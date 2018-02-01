@@ -1,5 +1,5 @@
 class Coincheck::SalesRatesController < ApplicationController
-  before_action :verify, only: [:index]
+  before_action :verify_request, only: [:index]
 
   def index
     time = params[:time]
@@ -18,7 +18,7 @@ class Coincheck::SalesRatesController < ApplicationController
   end
 
   private
-  def verify
+  def verify_request
     head :forbidden if ENV['VERIFY_REQUEST'].present? && !Security.verify?(request)
   end
 end
