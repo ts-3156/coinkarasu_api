@@ -6,7 +6,8 @@ SUFFIX='>>/home/ec2-user/coinkarasu_api/log/cron.log 2>&1'
  * * * * * /bin/bash -l -c "$RAKE_PREFIX coincheck:sales_rates:update $SUFFIX"
  * * * * * /bin/bash -l -c "$RAKE_PREFIX coincheck:trading_rates:update $SUFFIX"
  0 * * * * /bin/bash -l -c "$RAKE_PREFIX cryptocompare:top_pairs:update $SUFFIX"
-30 * * * * /bin/bash -l -c "$RAKE_PREFIX cryptocompare:coin_snapshots:update $SUFFIX"
+20 * * * * /bin/bash -l -c "$RAKE_PREFIX cryptocompare:coin_snapshots:update $SUFFIX"
+40 * * * * /bin/bash -l -c "$RAKE_PREFIX cryptocompare:price_multi_fulls:update $SUFFIX"
 
 # Send server stats
 10 * * * * /bin/bash -l -c "$RUNNER_PREFIX bin/send_server_stats.rb $SUFFIX"

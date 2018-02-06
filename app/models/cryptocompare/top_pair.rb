@@ -8,10 +8,6 @@ class Cryptocompare::TopPair < ApplicationRecord
   validates :data, presence: true
 
   class << self
-    def create_from_response!(res)
-      build_from_response(res).save!
-    end
-
     def build_from_response(res)
       json = JSON.parse(res)
       data = json['Data'].map do |row|
@@ -20,6 +16,33 @@ class Cryptocompare::TopPair < ApplicationRecord
       new(
           from_symbol: json['Data'][0]['fromSymbol'],
           data: data)
+    end
+
+    def symbols_pairs
+      # クエリの実行回数を減らすために、決め打ちのlimit付きで一括取得する
+      # 最新のレコードのみを残すためにindex_byの前にreverseしている
+      top_pairs = order(created_at: :desc)
+                      .where(from_symbol: SYMBOLS)
+                      .limit(SYMBOLS.size)
+                      .reverse
+                      .index_by(&:from_symbol)
+
+      pairs = []
+
+      SYMBOLS.each do |from|
+        top_pair = top_pairs[from]
+        unless top_pair
+          # 最初のクエリで取りこぼした時のために、念のため取得する
+          top_pair = order(created_at: :desc).find_by(from_symbol: from)
+        end
+        next unless top_pair
+
+        top_pair.data.map {|pair| pair['to_symbol']}.uniq.each do |to|
+          pairs << [from, to]
+        end
+      end
+
+      pairs
     end
   end
 end

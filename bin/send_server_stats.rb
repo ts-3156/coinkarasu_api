@@ -4,8 +4,9 @@ slack.ping("df ```#{`df -h`}```")
 [
     Coincheck::SalesRate,
     Coincheck::TradingRate,
+    Cryptocompare::TopPair,
     Cryptocompare::CoinSnapshot,
-    Cryptocompare::TopPair
+    Cryptocompare::PriceMultiFull,
 ].each do |clazz|
   lines = []
   clazz.where('created_at > ?', 3.hours.ago.beginning_of_hour)

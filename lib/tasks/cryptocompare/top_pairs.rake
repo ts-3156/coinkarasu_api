@@ -28,7 +28,7 @@ namespace :cryptocompare do
         begin
           records << Cryptocompare::TopPair.build_from_response(res)
         rescue => e
-          unless Cryptocompare::TopPair::IGNORE_LIST.any? {|f| from == f}
+          if Cryptocompare::TopPair::IGNORE_LIST.none? {|f| from == f}
             messages << "#{Time.zone.now} #{t.name} build error from=#{from} res=#{res} #{e.inspect}"
           end
         end

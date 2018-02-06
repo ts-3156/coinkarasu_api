@@ -10,10 +10,6 @@ class Cryptocompare::CoinSnapshot < ApplicationRecord
   validates :data, presence: true
 
   class << self
-    def create_from_response!(res)
-      build_from_response(res).save!
-    end
-
     def build_from_response(res)
       json = JSON.parse(res)
       data = json['Data']['Exchanges'].map do |row|
