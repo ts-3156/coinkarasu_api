@@ -76,6 +76,7 @@ GEM
     mini_portile2 (2.3.0)
     minitest (5.11.1)
     mysql2 (0.4.10)
+    newrelic_rpm (4.8.0.341)
     nio4r (2.2.0)
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
@@ -157,6 +158,7 @@ DEPENDENCIES
   jwt
   listen (>= 3.0.5, < 3.2)
   mysql2 (>= 0.3.18, < 0.5)
+  newrelic_rpm
   parallel
   puma (~> 3.7)
   rails (~> 5.1.4)

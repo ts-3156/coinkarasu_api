@@ -11,6 +11,7 @@ gem 'parallel'
 gem 'jwt'
 gem 'activerecord-import'
 gem 'slack-notifier'
+gem 'newrelic_rpm'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.7'
